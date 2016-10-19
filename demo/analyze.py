@@ -1,9 +1,9 @@
 import sys, argparse, time, os
 from collections import Counter
-import ioany
 import simeng
 from simeng.extras import makereport
 from simeng.statistics import valhist
+from simeng import ioutil
 
 
 parser = argparse.ArgumentParser()
@@ -18,9 +18,7 @@ if outdir is not None:
         os.mkdir(outdir)
 
 
-df = ioany.read_csv(args.infile,types=(int,int))
-print("df = %s" % df)
-rows = list(df.rows())
+rows = ioutil.slurp_csv(args.infile,types=(int,int))
 print("that be %d rows." % len(rows))
 for r in rows[0:3]:
     print(r)
@@ -46,7 +44,7 @@ if outdir:
     header = ('value','count')
     outfile = "%s/overlap_valhist.csv" % outdir
     print("save to '%s' .." % outfile)
-    ioany.save_csv(outfile,valhist,header=header)
+    ioutil.save_csv(outfile,valhist,header=header)
 
 print("itemhist =",type(eng.itemhist()))
 itemhist = Counter(eng.itemhist().values())
@@ -56,7 +54,7 @@ print("itemhist = ",itemhist[0:5])
 if outdir:
     outfile = "%s/itemhist.csv" % outdir
     print("save to '%s' .." % outfile)
-    ioany.save_csv(outfile,itemhist,header=header)
+    ioutil.save_csv(outfile,itemhist,header=header)
 
 N = 500
 print("top %d..." % N)
@@ -67,7 +65,7 @@ if outdir:
     flipped = ((k,v) for v,k in pairs)
     outfile = "%s/top-%d.csv" % (outdir,N)
     print("save to '%s' .." % outfile)
-    ioany.save_csv(outfile,flipped,header=header)
+    ioutil.save_csv(outfile,flipped,header=header)
 
 def jaccard_histogram(eng,N):
     jhist = [0 for _ in range (0,N)]
@@ -99,7 +97,7 @@ if outdir:
     header = ('expected','observed')
     outfile = "%s/jaccard.csv" % outdir
     print("save to '%s' .." % outfile)
-    ioany.save_csv(outfile,overlap_measures,header=header)
+    ioutil.save_csv(outfile,overlap_measures,header=header)
 
 # Let's count the number of pairs that have observed jaccard measure greater than the 
 # expectated measure.  Note that among overlapping measures this will be tilted to the 
