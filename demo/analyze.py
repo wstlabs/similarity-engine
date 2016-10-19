@@ -2,7 +2,7 @@ import sys, argparse, time, os
 from collections import Counter
 import ioany
 import simeng
-from simeng.utils import makereport
+from simeng.extras import makereport
 from simeng.statistics import valhist
 
 
