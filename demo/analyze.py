@@ -1,11 +1,7 @@
-#
-import sys, argparse, math, time, os
-from statistics import median, stdev
+import sys, argparse, time, os
 from collections import Counter
-from itertools import islice
-import numpy
-import laftap
-import simeng 
+import ioany
+import simeng
 from simeng.utils import makereport
 from simeng.statistics import valhist
 
@@ -22,7 +18,7 @@ if outdir is not None:
         os.mkdir(outdir)
 
 
-df = laftap.read_csv(args.infile,types=(int,int))
+df = ioany.read_csv(args.infile,types=(int,int))
 print("df = %s" % df)
 rows = list(df.rows())
 print("that be %d rows." % len(rows))
@@ -50,7 +46,7 @@ if outdir:
     header = ('value','count')
     outfile = "%s/overlap_valhist.csv" % outdir
     print("save to '%s' .." % outfile)
-    laftap.save_csv(outfile,valhist,header=header)
+    ioany.save_csv(outfile,valhist,header=header)
 
 print("itemhist =",type(eng.itemhist()))
 itemhist = Counter(eng.itemhist().values())
@@ -60,7 +56,7 @@ print("itemhist = ",itemhist[0:5])
 if outdir:
     outfile = "%s/itemhist.csv" % outdir
     print("save to '%s' .." % outfile)
-    laftap.save_csv(outfile,itemhist,header=header)
+    ioany.save_csv(outfile,itemhist,header=header)
 
 N = 500
 print("top %d..." % N)
@@ -71,13 +67,13 @@ if outdir:
     flipped = ((k,v) for v,k in pairs)
     outfile = "%s/top-%d.csv" % (outdir,N)
     print("save to '%s' .." % outfile)
-    laftap.save_csv(outfile,flipped,header=header)
+    ioany.save_csv(outfile,flipped,header=header)
 
 def jaccard_histogram(eng,N):
     jhist = [0 for _ in range (0,N)]
     for u,v in eng.pairs():
         jval = eng.jaccard(u,v) * N
-        k = int(jval) if jval < N else N-1 
+        k = int(jval) if jval < N else N-1
         jhist[k] += 1
     return jhist
 
@@ -103,7 +99,7 @@ if outdir:
     header = ('expected','observed')
     outfile = "%s/jaccard.csv" % outdir
     print("save to '%s' .." % outfile)
-    laftap.save_csv(outfile,overlap_measures,header=header)
+    ioany.save_csv(outfile,overlap_measures,header=header)
 
 # Let's count the number of pairs that have observed jaccard measure greater than the 
 # expectated measure.  Note that among overlapping measures this will be tilted to the 
