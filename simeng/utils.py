@@ -2,7 +2,6 @@ from collections import OrderedDict
 
 def makereport(eng):
     users = sorted(eng.users(),key=lambda u:len(eng.lookup(u)),reverse=True)
-    rank = {u:i for i,u in enumerate(users)}
     name = {u:fakename(i,2) for i,u in enumerate(users)}
     summary = [
         {
