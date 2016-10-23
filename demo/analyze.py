@@ -10,6 +10,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--infile", type=str, required=True, help="input file")
 parser.add_argument("--outdir", type=str, required=False, help="output directory")
 parser.add_argument("--limit", type=int, required=False, help="dump limit")
+parser.add_argument("--rename", required=False, action="store_true", help="rename users")
 args = parser.parse_args()
 
 outdir = args.outdir
@@ -18,7 +19,7 @@ if outdir is not None:
         os.mkdir(outdir)
 
 
-rows = ioutil.slurp_csv(args.infile,types=(int,int))
+rows = ioutil.slurp_csv(args.infile,types=(str,int))
 print("that be %d rows." % len(rows))
 for r in rows[0:3]:
     print(r)
@@ -80,7 +81,7 @@ jhist = jaccard_histogram(eng,100)
 print(jhist)
 
 print("and...")
-r = makereport(eng)
+r = makereport(eng,rename=args.rename)
 print(r['summary'][0:5])
 t = r['table']
 users = sorted(t.keys())[0:10]
