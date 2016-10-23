@@ -1,7 +1,7 @@
 import sys, argparse, os
 from collections import Counter
 import simeng
-from simeng.extras import makereport
+from simeng.extras import makereport, rankmap
 from simeng.statistics import valhist
 from simeng import ioutil
 
@@ -19,14 +19,31 @@ if outdir is not None:
         os.mkdir(outdir)
 
 
-rows = ioutil.slurp_csv(args.infile,types=(str,int))
-print("that be %d rows." % len(rows))
+likes = ioutil.slurp_csv(args.infile,types=(str,int))
+print("that be %d likes." % len(likes))
 
-eng = simeng.ingest(rows)
+eng = simeng.ingest(likes)
 eng.build()
 stats = eng.stats()
 for k in sorted(stats.keys()):
     print("stats[%s] = %s" % (k,stats[k]))
+
+if args.rename:
+    _rankmap = rankmap(eng)
+    _rankinv = {v:k for k,v in _rankmap.items()}
+    renamed = ((_rankmap[user],item) for user,item in likes)
+
+    outfile = "%s/rankmap.json" % outdir
+    print("rankmap to '%s' .." % outfile)
+    ioutil.save_json(outfile,_rankmap)
+
+    outfile = "%s/rankinv.json" % outdir
+    print("rankmap to '%s' .." % outfile)
+    ioutil.save_json(outfile,_rankinv)
+
+    outfile = "%s/renamed.csv" % outdir
+    print("renamed likes to '%s' .." % outfile)
+    ioutil.save_csv(outfile,renamed,header=('user','item'))
 
 # Note that we flip (u,v) in the call to eng.overlap() to exercise the
 # reflexive lookup feature.
