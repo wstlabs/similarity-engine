@@ -1,4 +1,4 @@
-import sys, argparse, time, os
+import sys, argparse, os
 from collections import Counter
 import simeng
 from simeng.extras import makereport
@@ -21,18 +21,12 @@ if outdir is not None:
 
 rows = ioutil.slurp_csv(args.infile,types=(str,int))
 print("that be %d rows." % len(rows))
-for r in rows[0:3]:
-    print(r)
 
-print("now ..")
 eng = simeng.ingest(rows)
-print(eng.stats())
-
-t0 = time.time()
 eng.build()
-dt = time.time() - t0
-print("built in %.3lf sec." % dt)
-print(eng.stats())
+stats = eng.stats()
+for k in sorted(stats.keys()):
+    print("stats[%s] = %s" % (k,stats[k]))
 
 # Note that we flip (u,v) in the call to eng.overlap() to exercise the
 # reflexive lookup feature.
@@ -47,9 +41,7 @@ if outdir:
     print("save to '%s' .." % outfile)
     ioutil.save_csv(outfile,valhist,header=header)
 
-print("itemhist =",type(eng.itemhist()))
 itemhist = Counter(eng.itemhist().values())
-print("itemhist =",type(itemhist))
 itemhist = sorted(itemhist.items(),reverse=True)
 print("itemhist = ",itemhist[0:5])
 if outdir:

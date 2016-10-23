@@ -1,3 +1,4 @@
+import time
 from collections import OrderedDict, defaultdict
 from itertools import combinations
 from copy import deepcopy
@@ -11,6 +12,7 @@ class SimilarityEngine(object):
         self._jaccard = None
         self._neighbors = None
         self._count = None
+        self._stats = None
         self.ingest(pairs)
 
     def ingest(self,pairs):
@@ -31,9 +33,12 @@ class SimilarityEngine(object):
         yield from combinations(self.users(),2)
 
     def build(self):
+        t0 = time.time()
         self.build_overlap()
         self.build_jaccard()
         self.build_counts()
+        delta = time.time() - t0
+        self._stats = {'delta':delta}
 
     def build_overlap(self):
         self._overlap = {}
@@ -104,7 +109,11 @@ class SimilarityEngine(object):
             'items': len(self._itemhist),
             'overlaps': None if self._overlap is None else len(self._overlap)//2,
         }
-        return {'general':general,'count':self.counts}
+        return {
+           'general': general,
+           'count': self.counts,
+           'build': deepcopy(self._stats),
+        }
 
 
 def looksym(d,a,b):
