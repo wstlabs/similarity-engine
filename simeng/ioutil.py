@@ -1,8 +1,9 @@
 import csv
 from copy import deepcopy
+import simplejson as json
 
 """
-A pair of simple idioms for CSV slurping + saving, to cut down on boilerplate
+A few simple idioms for slurping + saving to/from CSV/JSON, to cut down on boilerplate
 in our test + demo suites (and avoid dependencies on much heavier external packages
 that provide similar conveniences).
 """
@@ -86,4 +87,11 @@ def save_csv(path,rowset,encoding='utf-8',header=None,csvargs=None):
         for row in rowset:
             writer.writerow(row)
 
+def save_json(path,obj,sort_keys=True,indent=4):
+    with open(path,"wt",encoding="utf-8") as f:
+        f.write(json.dumps(obj,sort_keys=sort_keys,indent=indent))
+
+def slurp_json(path,encoding='utf-8'):
+    f = open(path,"rt",encoding=encoding)
+    return json.load(f)
 
