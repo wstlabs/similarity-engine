@@ -79,10 +79,11 @@ def slurp_csv(*args,**kwargs):
 def save_csv(path,rowset,encoding='utf-8',header=None,csvargs=None):
     if csvargs is None:
         csvargs = {}
-    writer = csv.writer(f,**csvargs)
-    if header:
-        writer.writerow(header)
-    for row in rowset:
-        writer.writerow(row)
+    with open(path,"wt",encoding=encoding) as f:
+        writer = csv.writer(f,**csvargs)
+        if header:
+            writer.writerow(header)
+        for row in rowset:
+            writer.writerow(row)
 
 
