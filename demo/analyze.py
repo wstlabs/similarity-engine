@@ -54,7 +54,7 @@ print("top %d..." % N)
 pairs = sorted(((v,k) for k,v in eng.itemhist().items()),reverse=True)[0:N]
 print(pairs[0:10])
 if outdir:
-    header = ('song_id','count')
+    header = ('item_id','count')
     flipped = ((k,v) for v,k in pairs)
     outfile = "%s/top-%d.csv" % (outdir,N)
     print("save to '%s' .." % outfile)
