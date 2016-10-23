@@ -1,19 +1,18 @@
 from collections import OrderedDict
 
-def makereport(eng):
+def makereport(eng,rename=True):
     users = sorted(eng.users(),key=lambda u:len(eng.lookup(u)),reverse=True)
-    name = {u:fakename(i,2) for i,u in enumerate(users)}
     summary = [
         {
             'user':u,
-            'name':name[u],
             'likes':len(eng.lookup(u)),
             'neighbors':len(eng.neighbors(u)),
         } for u in users
     ]
     t = {}
-    for r in summary:
-        name,user = r['name'],r['user']
+    for i,r in enumerate(summary):
+        user = r['user']
+        name = fakename(i,2) if rename else user
         neighbors = sorted(eng.neighbors(user),key=lambda v:eng.jaccard(user,v),reverse=True)
         jaccard = OrderedDict((v,eng.jaccard(user,v)) for v in neighbors)
         t[name] = list(jaccard.items())[0:10]
