@@ -97,6 +97,7 @@ class SimilarityEngine(object):
             raise KeyError("invalid user '%s'" % u)
 
     def itemhist(self):
+        """Returns a dict representing the number of users who have liked each item."""
         return deepcopy(self._itemhist)
 
     @property
