@@ -144,6 +144,14 @@ exp_neg = sum(1 for _ in filter(lambda p:p[1]<p[0],overlap_measures))
 print("Among overlapping pairs : %d pairs below expected measure, and %d above." % (exp_neg,exp_pos)) 
 print("Among all pairs         : %d pairs below expected measure, and %d above." % (count_non_overlap+exp_neg,exp_pos)) 
 
+import statistics
+print("finally...")
+pairwise = (eng.surprise(u,v) for u,v in eng.pairs())
+s = sorted(_ for _ in pairwise if _ > 0)
+smedian = statistics.median(s)
+print("surprise: count = %d, min = %4f, max = %.4f, median = %.4f" % (len(s),s[0],s[-1],smedian))
+count = 20
+print("surprise: top %d = %s" % (count,s[:-count:-1]))
 
 
 
