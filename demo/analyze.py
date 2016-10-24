@@ -44,6 +44,8 @@ if args.rename:
     outfile = "%s/renamed.csv" % outdir
     print("renamed likes to '%s' .." % outfile)
     ioutil.save_csv(outfile,renamed,header=('user','item'))
+    print("done.")
+    sys.exit(1)
 
 # Note that we flip (u,v) in the call to eng.overlap() to exercise the
 # reflexive lookup feature.
@@ -90,15 +92,22 @@ jhist = jaccard_histogram(eng,100)
 print(jhist)
 
 
+
+def present(x):
+    if isinstance(x,float):
+        return "%.5f" % x
+    else:
+        return x
+
 from itertools import chain
 def display(r):
     for user,summ in r.items():
-        nicetups = ((user,"%.5f" % measure) for user,measure in summ['select'])
+        nicetups = ((user,present(value)) for user,value in summ['select'])
         nicevals = chain(*nicetups)
         yield [user,summ['likes'],summ['neighbors']] + list(nicevals) 
 
 print("best...")
-for mode in ('jaccard','surprise'):
+for mode in ('jaccard','surprise','overlap'):
     r = find_best(eng,mode=mode)
     outfile = "%s/display-%s.csv" % (outdir,mode)
     print("display to %s .." % outfile)
