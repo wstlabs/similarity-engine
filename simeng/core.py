@@ -84,6 +84,10 @@ class SimilarityEngine(object):
         prob_v = len(self._lookup[v]) / len(self._itemhist)
         return prob_u * prob_v / (prob_u + prob_v - prob_u * prob_v)
 
+    def surprise(self,u,v):
+        jaccard = self.jaccard(u,v)
+        return None if jaccard is None else jaccard / self.expected_jaccard(u,v)
+
     def neighbors(self,u):
         if self._neighbors is None:
             raise RuntimeError("invalid operation - neighbor lookups not initialized")
