@@ -3,10 +3,10 @@ from collections import OrderedDict
 
 def active_users(engine,reverse=True):
     """Given a SimilarityEngine instance :eng, returns a list of users sorted by like activity
-    (the number of like per user), in descending or ascending order, respectivtly, according
+    (the number of like per user), in descending or ascending order, respectively, according
     to the True/False status of the :reverse flag, which defaults to True (for descending order).
 
-    Strictly speaking it sorts on the tuple (like-activity,username) to  guarantee reproducibility."""
+    Strictly speaking it sorts on the tuple (like-activity,username) to guarantee reproducibility."""
     return sorted(engine.users(),key=lambda u:(len(engine.lookup(u)),u),reverse=reverse)
 
 def findmax(engine,user,measure,count):
