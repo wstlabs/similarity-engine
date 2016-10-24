@@ -1,42 +1,29 @@
 import math
 from collections import OrderedDict
 
-def active_users(eng,reverse=True):
+def active_users(engine,reverse=True):
     """Given a SimilarityEngine instance :eng, returns a list of users sorted by like activity
     (the number of like per user), in descending or ascending order, respectivtly, according
     to the True/False status of the :reverse flag, which defaults to True (for descending order).
 
     Strictly speaking it sorts on the tuple (like-activity,username) to  guarantee reproducibility."""
-    return sorted(eng.users(),key=lambda u:(len(eng.lookup(u)),u),reverse=reverse)
+    return sorted(engine.users(),key=lambda u:(len(engine.lookup(u)),u),reverse=reverse)
 
-def makereport(eng,rename=True):
-    users = active_users(eng)
-    summary = [
-        {
-            'user':u,
-            'likes':len(eng.lookup(u)),
-            'neighbors':len(eng.neighbors(u)),
-        } for u in users
-    ]
-    t = {}
-    for r in summary: 
-        user = r['user']
-        neighbors = sorted(eng.neighbors(user),key=lambda v:eng.jaccard(user,v),reverse=True)
-        jaccard = OrderedDict((v,eng.jaccard(user,v)) for v in neighbors)
-        t[user] = list(jaccard.items())[0:10]
+def select_jaccard(engine,user,count):
+    neighbors = sorted(engine.neighbors(user),key=lambda v:engine.jaccard(user,v),reverse=True)
+    jaccard = OrderedDict((v,engine.jaccard(user,v)) for v in neighbors)
+    return list(jaccard.items())[:count]
+
+def project(engine,user):
     return {
-        'summary':summary,
-        'table':t
+        'likes':len(engine.lookup(user)),
+        'neighbors':len(engine.neighbors(user)),
+        'jaccard':select_jaccard(engine,user,10)
     }
 
-
-def _fakename(n,k):
-    if k != 2:
-        raise ValueError("invalid depth")
-    if n < 0 or n >= 26*26:
-        raise ValueError("invalid user index")
-    x,y = n//26,n%26
-    return chr(ord('A')+x)+chr(ord('A')+y)
+def find_best(engine):
+    users = active_users(engine)
+    return OrderedDict((user,project(engine,user)) for user in users)
 
 def assert_posint(n):
     if not (isinstance(n,int) and n >= 0):

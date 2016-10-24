@@ -1,8 +1,8 @@
 import sys, argparse, os
 from collections import Counter
 import simeng
-from simeng.extras import makereport, rankmap
-from simeng.statistics import valhist
+from simeng.extras import rankmap, find_best
+from simeng.util.statistics import valhist
 from simeng import ioutil
 
 
@@ -89,13 +89,28 @@ print("jhist ..")
 jhist = jaccard_histogram(eng,100)
 print(jhist)
 
-print("and...")
-r = makereport(eng,rename=args.rename)
-print(r['summary'][0:5])
-t = r['table']
-users = sorted(t.keys())[0:10]
-for u in users:
-    print("%s: %s" % (u,t[u]))
+
+from itertools import chain
+def display(r):
+    for user,summ in r.items():
+        nicetups = ((user,"%.5f" % measure) for user,measure in summ['jaccard'])
+        nicevals = chain(*nicetups)
+        yield [user,summ['likes'],summ['neighbors']] + list(nicevals) 
+
+print("best...")
+r = find_best(eng)
+outfile = "%s/display.csv" % outdir
+print("display to %s .." % outfile)
+ioutil.save_csv(outfile,display(r),header=('user','likes','nabes','jaccard'))
+
+
+
+# r = makereport(eng)
+#print(r['summary'][0:5])
+# t = r['table']
+# users = sorted(t.keys())[0:10]
+# for u in users:
+#    print("%s: %s" % (u,t[u]))
 
 print("export jaccard...")
 measures = list((eng.expected_jaccard(u,v),eng.jaccard(u,v)) for u,v in eng.pairs())
