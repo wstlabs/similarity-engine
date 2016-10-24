@@ -93,15 +93,16 @@ print(jhist)
 from itertools import chain
 def display(r):
     for user,summ in r.items():
-        nicetups = ((user,"%.5f" % measure) for user,measure in summ['jaccard'])
+        nicetups = ((user,"%.5f" % measure) for user,measure in summ['select'])
         nicevals = chain(*nicetups)
         yield [user,summ['likes'],summ['neighbors']] + list(nicevals) 
 
 print("best...")
-r = find_best(eng)
-outfile = "%s/display.csv" % outdir
-print("display to %s .." % outfile)
-ioutil.save_csv(outfile,display(r),header=('user','likes','nabes','jaccard'))
+for mode in ('jaccard','surprise'):
+    r = find_best(eng,mode=mode)
+    outfile = "%s/display-%s.csv" % (outdir,mode)
+    print("display to %s .." % outfile)
+    ioutil.save_csv(outfile,display(r),header=('user','likes','nabes','jaccard'))
 
 
 

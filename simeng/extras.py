@@ -9,22 +9,34 @@ def active_users(engine,reverse=True):
     Strictly speaking it sorts on the tuple (like-activity,username) to  guarantee reproducibility."""
     return sorted(engine.users(),key=lambda u:(len(engine.lookup(u)),u),reverse=reverse)
 
-def findmax(engine,user,count):
+def findmax(engine,user,measure,count):
+    """Returns a list of top (user,measure) pairs, sorted by measure, up to a given :count"""
     neighbors = engine.neighbors(user)
-    d = {v:engine.jaccard(user,v) for v in neighbors}
+    d = {v:measure(user,v) for v in neighbors}
     ranked = sorted(neighbors,key=lambda v:d[v],reverse=True)
     return list((v,d[v]) for v in ranked[:count])
 
+def select_measure(engine,mode):
+    """Derives a suitable pairwise measure function based on a keyword argument."""
+    _measure = {
+        'jaccard': lambda u,v:engine.jaccard(u,v),
+        'surprise': lambda u,v:engine.surprise(u,v),
+    }
+    if mode not in _measure:
+        raise ValueError("invalid mode '%s'" % mode)
+    return _measure[mode]
+
 def project(engine,user,mode='jaccard'):
+    measure = select_measure(engine,mode)
     return {
         'likes':len(engine.lookup(user)),
         'neighbors':len(engine.neighbors(user)),
-        'jaccard':findmax(engine,user,10)
+        'select':findmax(engine,user,measure,10)
     }
 
-def find_best(engine):
+def find_best(engine,mode):
     users = active_users(engine)
-    return OrderedDict((user,project(engine,user)) for user in users)
+    return OrderedDict((user,project(engine,user,mode)) for user in users)
 
 def assert_posint(n):
     if not (isinstance(n,int) and n >= 0):
