@@ -9,16 +9,17 @@ def active_users(engine,reverse=True):
     Strictly speaking it sorts on the tuple (like-activity,username) to  guarantee reproducibility."""
     return sorted(engine.users(),key=lambda u:(len(engine.lookup(u)),u),reverse=reverse)
 
-def select_jaccard(engine,user,count):
-    neighbors = sorted(engine.neighbors(user),key=lambda v:engine.jaccard(user,v),reverse=True)
-    jaccard = OrderedDict((v,engine.jaccard(user,v)) for v in neighbors)
-    return list(jaccard.items())[:count]
+def findmax(engine,user,count):
+    neighbors = engine.neighbors(user)
+    d = {v:engine.jaccard(user,v) for v in neighbors}
+    ranked = sorted(neighbors,key=lambda v:d[v],reverse=True)
+    return list((v,d[v]) for v in ranked[:count])
 
-def project(engine,user):
+def project(engine,user,mode='jaccard'):
     return {
         'likes':len(engine.lookup(user)),
         'neighbors':len(engine.neighbors(user)),
-        'jaccard':select_jaccard(engine,user,10)
+        'jaccard':findmax(engine,user,10)
     }
 
 def find_best(engine):
