@@ -32,6 +32,9 @@ class SimilarityEngine(object):
     def pairs(self):
         yield from combinations(self.users(),2)
 
+    def edges(self):
+        yield from ((u,v) for u,v in self.pairs() if self.overlap(u,v))
+
     def build(self):
         t0 = time.time()
         self.build_overlap()
@@ -109,10 +112,12 @@ class SimilarityEngine(object):
         return dict(self._count)
 
     def stats(self):
+        overlaps = None if self._overlap is None else len(self._overlap)//2
         general = {
+            'edges': 0 if overlaps is None else sum(1 for _ in self.edges()),
             'users': len(self._lookup),
             'items': len(self._itemhist),
-            'overlaps': None if self._overlap is None else len(self._overlap)//2,
+            'overlaps': overlaps,
         }
         return {
            'general': general,
