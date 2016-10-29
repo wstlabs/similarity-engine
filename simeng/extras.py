@@ -19,9 +19,9 @@ def findmax(engine,user,measure,depth):
 def select_measure(engine,mode):
     """Derives a suitable pairwise measure function based on a keyword argument."""
     _measure = {
+        'overlap': lambda u,v:len(engine.overlap(u,v)),
         'jaccard': lambda u,v:engine.jaccard(u,v),
         'surprise': lambda u,v:engine.surprise(u,v),
-        'overlap': lambda u,v:len(engine.overlap(u,v)),
     }
     if mode not in _measure:
         raise ValueError("invalid mode '%s'" % mode)
