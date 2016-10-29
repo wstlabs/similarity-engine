@@ -107,7 +107,7 @@ def display(r):
         yield [user,summ['likes'],summ['neighbors']] + list(nicevals) 
 
 print("best...")
-for mode in ('overlap','jaccard','surprise'):
+for mode in ('overlap','jaccard','surprise','logsurp'):
     r = find_best(eng,mode=mode)
     outfile = "%s/display-%s.csv" % (outdir,mode)
     print("display to %s .." % outfile)

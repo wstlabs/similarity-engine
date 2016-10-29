@@ -22,6 +22,7 @@ def select_measure(engine,mode):
         'overlap': lambda u,v:len(engine.overlap(u,v)),
         'jaccard': lambda u,v:engine.jaccard(u,v),
         'surprise': lambda u,v:engine.surprise(u,v),
+        'logsurp': lambda u,v:math.log(engine.surprise(u,v),2),
     }
     if mode not in _measure:
         raise ValueError("invalid mode '%s'" % mode)
