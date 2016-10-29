@@ -115,13 +115,6 @@ for mode in ('jaccard','surprise','overlap'):
 
 
 
-# r = makereport(eng)
-#print(r['summary'][0:5])
-# t = r['table']
-# users = sorted(t.keys())[0:10]
-# for u in users:
-#    print("%s: %s" % (u,t[u]))
-
 print("export jaccard...")
 measures = list((eng.expected_jaccard(u,v),eng.jaccard(u,v)) for u,v in eng.pairs())
 print("that be %d measures." % len(measures))
