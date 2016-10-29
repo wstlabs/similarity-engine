@@ -2,19 +2,19 @@ import math
 from collections import OrderedDict
 
 def active_users(engine,reverse=True):
-    """Given a SimilarityEngine instance :eng, returns a list of users sorted by like activity
+    """Given a SimilarityEngine instance, returns a list of users sorted by like activity
     (the number of like per user), in descending or ascending order, respectively, according
     to the True/False status of the :reverse flag, which defaults to True (for descending order).
 
     Strictly speaking it sorts on the tuple (like-activity,username) to guarantee reproducibility."""
     return sorted(engine.users(),key=lambda u:(len(engine.lookup(u)),u),reverse=reverse)
 
-def findmax(engine,user,measure,count):
-    """Returns a list of top (user,measure) pairs, sorted by measure, up to a given :count"""
+def findmax(engine,user,measure,depth):
+    """Returns a list of top (user,measure) pairs, sorted by measure, up to a given :depth"""
     neighbors = engine.neighbors(user)
     d = {v:measure(user,v) for v in neighbors}
     ranked = sorted(neighbors,key=lambda v:d[v],reverse=True)
-    return list((v,d[v]) for v in ranked[:count])
+    return list((v,d[v]) for v in ranked[:depth])
 
 def select_measure(engine,mode):
     """Derives a suitable pairwise measure function based on a keyword argument."""
@@ -27,12 +27,20 @@ def select_measure(engine,mode):
         raise ValueError("invalid mode '%s'" % mode)
     return _measure[mode]
 
-def project(engine,user,mode='jaccard'):
+def project(engine,user,mode='jaccard',depth=10):
+    """Given a SimilarityEngine instance, a :user and a :mode, returns a dict with
+    the following measures for that user:
+
+    likes - total number of likes
+    neighbors - total number of neighbors
+    select - a list of tuples of (neighbor_id,measure) for the top matches
+        according to that measure, up to the specified :depth
+    """
     measure = select_measure(engine,mode)
     return {
         'likes':len(engine.lookup(user)),
         'neighbors':len(engine.neighbors(user)),
-        'select':findmax(engine,user,measure,10)
+        'select':findmax(engine,user,measure,depth)
     }
 
 def find_best(engine,mode):
