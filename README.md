@@ -18,7 +18,7 @@ In early development stages.  Not recommended for production use.
 
 ### Testing 
 
-No unit tests.  Currently QA'd through extensive personal use only.
+No unit tests.  Do you know what this means? 
 
 ### Bugs & Caveats
 * Python 3 only 
