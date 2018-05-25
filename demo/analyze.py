@@ -145,8 +145,5 @@ smedian = statistics.median(s)
 print("surprise: count = %d, min = %4f, max = %.4f, median = %.4f" % (len(s),s[0],s[-1],smedian))
 count = 20
 print("surprise: top %d = %s" % (count,s[:-count:-1]))
-
-
-
-
 print("all done.")
+
