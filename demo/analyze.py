@@ -104,7 +104,7 @@ def display(r):
     for user,summ in r.items():
         nicetups = ((user,present(value)) for user,value in summ['select'])
         nicevals = chain(*nicetups)
-        yield [user,summ['likes'],summ['neighbors']] + list(nicevals) 
+        yield [user,summ['likes'],summ['neighbors']] + list(nicevals)
 
 print("best...")
 for mode in ('overlap','jaccard','surprise','logsurp'):
