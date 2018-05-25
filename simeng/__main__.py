@@ -1,8 +1,7 @@
-import sys
 import argparse
 
 """
-    Stub class for default entry point.
+Stub class for default entry point.
 """
 
 
@@ -11,8 +10,9 @@ def main(args=None):
 
     print("This is the main routine.")
     print("It should do something interesting.")
+    print("But it doesn't.")
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
 

@@ -2,10 +2,8 @@
 Flips an overlap-based like table to a normalized one.
 """
 
-import sys, argparse
-import simplejson as json
+import argparse
 import simeng.ioutil as ioutil
-from collections import OrderedDict
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -31,7 +29,7 @@ def canon_order(pairs):
     return [(k,d[k]) for k in sort_tups(d.keys())]
 
 def convert(pairs):
-    """Takes a sorted list of (tupkey,count) pairs, and emits a corresponding 
+    """Takes a sorted list of (tupkey,count) pairs, and emits a corresponding
     sequence of (sym,item) pairs."""
     i = 1
     for tupkey,count in pairs:
