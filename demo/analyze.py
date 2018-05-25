@@ -134,8 +134,8 @@ if outdir:
 count_non_overlap = len(measures) - len(overlap_measures)
 exp_pos = sum(1 for _ in filter(lambda p:p[1]>p[0],overlap_measures))
 exp_neg = sum(1 for _ in filter(lambda p:p[1]<p[0],overlap_measures))
-print("Among overlapping pairs : %d pairs below expected measure, and %d above." % (exp_neg,exp_pos)) 
-print("Among all pairs         : %d pairs below expected measure, and %d above." % (count_non_overlap+exp_neg,exp_pos)) 
+print("Among overlapping pairs : %d pairs below expected measure, and %d above." % (exp_neg,exp_pos))
+print("Among all pairs         : %d pairs below expected measure, and %d above." % (count_non_overlap+exp_neg,exp_pos))
 
 import statistics
 print("finally...")
