@@ -4,7 +4,7 @@ from setuptools import setup
 setup(
     name='simeng',
     license='BSD',
-    version='0.0.1',
+    version='0.0.2',
     url='http://github.com/wstlabs/simengine',
     author='wstlabs',
     author_email='notyet@notyet.org',
