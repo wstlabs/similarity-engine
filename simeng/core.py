@@ -81,7 +81,7 @@ class SimilarityEngine(object):
         return looksym(self._jaccard,u,v)
 
     def expected_jaccard(self,u,v):
-        """Expected jaccard measure of two samples of the same sizes as the actual likes for users :u and :v, 
+        """Expected jaccard measure of two samples of the same sizes as the actual likes for users :u and :v,
            respectively, (naively) assuming a uniform distrbution over our total space of :items."""
         prob_u = len(self._lookup[u]) / len(self._itemhist)
         prob_v = len(self._lookup[v]) / len(self._itemhist)
