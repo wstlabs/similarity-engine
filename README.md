@@ -18,13 +18,13 @@ In early development stages.  Not recommended for production use.
 
 ### Testing 
 
-No unit tests.  Do you know what this means? 
+No unit tests.  But there are scripts under the `demo` dir that exercise basic functionality.
 
 ### Bugs & Caveats
 * Python 3 only 
 
 ```
-Copyright 2017-2018 wstlabs (https://github.com/wstlabs) 
+Copyright 2017-2022 wstlabs (https://github.com/wstlabs) 
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this software except in compliance with the License.
